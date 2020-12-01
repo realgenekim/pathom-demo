@@ -52,27 +52,20 @@
 (defn element [name props & children]
   (apply js/React.createElement name (clj->js props) children))
 
-(def desc (atom {:name "Hello world"}))
+(def desc (atom {:vimeo.video/name "Hello world"}))
 
 (ws/defcard vimeo-test1
   (ct.react/react-card
-    (let [txt (:name @desc)]
+    (let [txt (:vimeo.video/name @desc)]
       (element "div" {} txt))))
 
 (defn fetch-vimeo! []
   (println "entering main/vimeo-test1")
   (async/go
-    (let [res (v.api/adapt-video
-                ;(vimeo.util/vimeo-api
-                (v.api/single-fetch-video-by-id
-                  {:demo.connect.vimeo/access-token secret/vimeo-token
-                   ::p.http/driver                    p.http.fetch/request-async}
-                  ;{:vimeo.video/id 467144004}))]
-                  ;"videos"
-                  {:vimeo.video/id 467144004}))]
-     ;{:id "467144004"})]
-      ;(println "!!!!" res)
-      ;(println (type res))
+    (let [res (v.api/single-fetch-video-by-id
+                {:demo.connect.vimeo/access-token secret/vimeo-token
+                 ::p.http/driver                  p.http.fetch/request-async}
+                {:vimeo.video/id 467144004})]
 
       (let [resres (async/<! res)
             _ (println "main: type resres: " (type resres))]
@@ -80,15 +73,6 @@
 
         (reset! desc resres)))))
 
-
-                     ;(:description resres)))))))
-                     ;"Hello World")))))
-
-  ,
-  ;(vimeo.util/vimeo-api-123
-  ;  {:demo.connect.vimeo/access-token secret/vimeo-token}
-  ;  "videos"
-  ;  {:id   "467144004"}))
 
 
 (ws/mount)
