@@ -4,8 +4,7 @@
 
 
 (defn adapt-video [vimeo]
-  vimeo)
-  ;(util/adapt-recursive vimeo "vimeo.video"))
+  (util/adapt-recursive vimeo "vimeo.video"))
 
 
 ;(defn single-fetch-launch [env input]
