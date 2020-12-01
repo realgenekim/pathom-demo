@@ -52,32 +52,39 @@
 (defn element [name props & children]
   (apply js/React.createElement name (clj->js props) children))
 
+(def desc (atom {:name "Hello world"}))
+
 (ws/defcard vimeo-test1
   (ct.react/react-card
-    (do
-      (println "entering main/vimeo-test1")
-      (let [res (v.api/adapt-video
-                  (vimeo.util/vimeo-api
-                   ; v.api/single-fetch-video-by-id
-                    {:demo.connect.vimeo/access-token secret/vimeo-token
-                     ::p.http/driver                    p.http.fetch/request-async}
-                    ;{:vimeo.video/id 467144004}))]
-                    "videos"
-                    {:id 467144004}))]
-                  ;{:id "467144004"})]
-        (println "!!!!" res)
-        (println (type res))
+    (let [txt (:name @desc)]
+      (element "div" {} txt))))
 
-        (let [resres (async/go
-                       (async/<! res))
-              _ (println "main: result: " resres)]
+(defn fetch-vimeo! []
+  (println "entering main/vimeo-test1")
+  (async/go
+    (let [res (v.api/adapt-video
+                ;(vimeo.util/vimeo-api
+                (v.api/single-fetch-video-by-id
+                  {:demo.connect.vimeo/access-token secret/vimeo-token
+                   ::p.http/driver                    p.http.fetch/request-async}
+                  ;{:vimeo.video/id 467144004}))]
+                  ;"videos"
+                  {:vimeo.video/id 467144004}))]
+     ;{:id "467144004"})]
+      ;(println "!!!!" res)
+      ;(println (type res))
+
+      (let [resres (async/<! res)
+            _ (println "main: type resres: " (type resres))]
+       ;_ (println "main: result: " resres)]
+
+        (reset! desc resres)))))
 
 
-          (element "div" {}
-                   (:description resres))))))
-                   ;"Hello World")))))
+                     ;(:description resres)))))))
+                     ;"Hello World")))))
 
-  ,)
+  ,
   ;(vimeo.util/vimeo-api-123
   ;  {:demo.connect.vimeo/access-token secret/vimeo-token}
   ;  "videos"
