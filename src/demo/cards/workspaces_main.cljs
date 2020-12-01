@@ -8,7 +8,11 @@
             [demo.connect.spacex.plugin :as spacex.plugin]
             [demo.connect.youtube.plugin :as youtube.plugin]
             [demo.secret :as secret]
-            [demo.cards.shared-workspaces]))
+            [demo.cards.shared-workspaces]
+            [nubank.workspaces.card-types.react :as ct.react]
+            [demo.connect.vimeo.util :as vimeo.util]
+            [demo.connect.vimeo.api :as v.api]
+            [cljs.core.async :as async]))
 
 
 (pc/defresolver my-videos [env input]
@@ -31,6 +35,7 @@
                  ::pc/mutate-dispatch               pc/mutation-dispatch-embedded
                  ::p.http/driver                    p.http.fetch/request-async
                  :demo.connect.youtube/access-token secret/youtube-token
+                 :demo.connect.vimeo/access-token   secret/vimeo-token
                  ::db                               (atom {})}
     ::p/mutate  pc/mutate-async
     ::p/plugins [p/error-handler-plugin
@@ -43,6 +48,40 @@
 
 (ws/defcard simple-parser-demo
   (pvw/pathom-card {::pvw/parser (parser)}))
+
+(defn element [name props & children]
+  (apply js/React.createElement name (clj->js props) children))
+
+(ws/defcard vimeo-test1
+  (ct.react/react-card
+    (do
+      (println "entering main/vimeo-test1")
+      (let [res (v.api/adapt-video
+                  (vimeo.util/vimeo-api
+                   ; v.api/single-fetch-video-by-id
+                    {:demo.connect.vimeo/access-token secret/vimeo-token
+                     ::p.http/driver                    p.http.fetch/request-async}
+                    ;{:vimeo.video/id 467144004}))]
+                    "videos"
+                    {:id 467144004}))]
+                  ;{:id "467144004"})]
+        (println "!!!!" res)
+        (println (type res))
+
+        (let [resres (async/go
+                       (async/<! res))
+              _ (println "main: result: " resres)]
+
+
+          (element "div" {}
+                   (:description resres))))))
+                   ;"Hello World")))))
+
+  ,)
+  ;(vimeo.util/vimeo-api-123
+  ;  {:demo.connect.vimeo/access-token secret/vimeo-token}
+  ;  "videos"
+  ;  {:id   "467144004"}))
 
 
 (ws/mount)
