@@ -2,6 +2,8 @@
 
 (def aliases {})
 
+; :vimeo.video.user/uri "/users/118038002",
+
 ;(def aliases
 ;  {:youtube.video.snippet/channel-id                   :youtube.channel/id
 ;   :youtube.playlist.snippet/channel-id                :youtube.channel/id
@@ -10,8 +12,12 @@
 ;   :youtube.playlist-item.snippet/channel-id           :youtube.channel/id
 ;   :youtube.playlist-item.snippet/playlist-id          :youtube.playlist/id})
 
+(def me
+  [{:vimeo.me/endpoints [:methods :path]}])
+
 (def video
-  [:vimeo.video/id
+  [:vimeo.user/id
+   :vimeo.video/id
    :vimeo.video/categories
    :vimeo.video/content-rating
    :vimeo.video/created-time
@@ -231,4 +237,119 @@
    :vimeo.video.user.preferences.videos.privacy/download
    :vimeo.video.user.preferences.videos.privacy/embed
    :vimeo.video.user.preferences.videos.privacy/view])
+
+
+
+(def albums
+  [:vimeo.user/id
+   {:vimeo.albums/data [:allow_continuous_play
+                        :allow_downloads
+                        :allow_share
+                        :autoplay
+                        :brand_color
+                        :created_time
+                        {:custom_logo [:active :default_picture :resource_key {:sizes [:height :link :width]} :type :uri]}
+                        :description
+                        :domain
+                        :domain_certificate_state
+                        :duration
+                        {:embed [:html]}
+                        :embed_brand_color
+                        :embed_custom_logo
+                        :hide_nav
+                        :hide_upcoming
+                        :hide_vimeo_logo
+                        :layout
+                        :link
+                        :loop
+                        {:metadata [{:connections [{:available_videos [:options :total :uri]}
+                                                   {:videos [:options :total :uri]}]}
+                                    {:interactions [{:add_custom_thumbnails [:options :uri]}
+                                                    {:add_live_events [:options :uri]}
+                                                    {:add_logos [:options :uri]}
+                                                    {:add_videos [:options :uri]}]}]}
+                        :modified_time
+                        :name
+                        {:pictures [:active
+                                    :default_picture
+                                    :resource_key
+                                    {:sizes [:height :link :link_with_play_button :width]}
+                                    :type
+                                    :uri]}
+                        {:privacy [:view :password]}
+                        :resource_key
+                        :review_mode
+                        :roku_genres
+                        :roku_language
+                        :roku_provider_name
+                        :seo_allow_indexed
+                        :seo_description
+                        :seo_keywords
+                        :seo_title
+                        :share_link
+                        :sort
+                        :theme
+                        :uri
+                        :url
+                        :use_custom_domain
+                        {:user [:account
+                                :available_for_hire
+                                :bio
+                                :can_work_remotely
+                                :created_time
+                                :gender
+                                :link
+                                :location
+                                {:location_details [:city
+                                                    :country
+                                                    :country_iso_code
+                                                    :formatted_address
+                                                    :latitude
+                                                    :longitude
+                                                    :neighborhood
+                                                    :state
+                                                    :state_iso_code
+                                                    :sub_locality]}
+                                {:metadata [{:connections [{:albums [:options :total :uri]}
+                                                           {:appearances [:options :total :uri]}
+                                                           {:channels [:options :total :uri]}
+                                                           {:feed [:options :uri]}
+                                                           {:folders [:options :total :uri]}
+                                                           {:folders_root [:options :uri]}
+                                                           {:followers [:options :total :uri]}
+                                                           {:following [:options :total :uri]}
+                                                           {:groups [:options :total :uri]}
+                                                           {:likes [:options :total :uri]}
+                                                           {:membership [:options :uri]}
+                                                           {:moderated_channels [:options :total :uri]}
+                                                           {:pictures [:options :total :uri]}
+                                                           {:portfolios [:options :total :uri]}
+                                                           {:shared [:options :total :uri]}
+                                                           {:teams [:options :total :uri]}
+                                                           {:videos [:options :total :uri]}]}
+                                            {:interactions [{:block [:added :added_time :options :uri]}
+                                                            {:follow [:added :added_time :options :uri]}
+                                                            {:report [:options :reason :uri]}]}]}
+                                :name
+                                {:pictures [:active
+                                            :default_picture
+                                            :resource_key
+                                            {:sizes [:height :link :width]}
+                                            :type
+                                            :uri]}
+                                {:preferences [{:videos [{:privacy [:add :comments :download :embed :view]}]}]}
+                                :resource_key
+                                :short_bio
+                                :skills
+                                :uri
+                                {:websites [:description :link :name :type :uri]}]}
+                        :web_brand_color
+                        :web_custom_logo]}
+   :vimeo.albums/page
+   :vimeo.albums/per-page
+   :vimeo.albums/total
+   :vimeo.albums.paging/first
+   :vimeo.albums.paging/last
+   :vimeo.albums.paging/next
+   :vimeo.albums.paging/previous])
 

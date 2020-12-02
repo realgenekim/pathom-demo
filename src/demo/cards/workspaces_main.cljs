@@ -7,6 +7,7 @@
             [com.wsscode.pathom.diplomat.http.fetch :as p.http.fetch]
             [demo.connect.spacex.plugin :as spacex.plugin]
             [demo.connect.youtube.plugin :as youtube.plugin]
+            [demo.connect.vimeo.plugin :as vimeo.plugin]
             [demo.secret :as secret]
             [demo.cards.shared-workspaces]
             [nubank.workspaces.card-types.react :as ct.react]
@@ -19,7 +20,8 @@
   {::pc/output [{:my-videos [:youtube.video/id]}]}
   {:my-videos [{:youtube.video/id "6_mbxaRDA-s"}
                {:youtube.video/id "l5ML_4WnAWg"}
-               {:youtube.video/id "oo-7mN9WXTw"}]})
+               {:youtube.video/id "oo-7mN9WXTw"}]
+   :my-vimeo [{:vimeo.video/id 467144004}]})
 
 
 (defn app-registry []
@@ -43,7 +45,8 @@
                  p/trace-plugin
                  (pc/connect-plugin {::pc/register (app-registry)})
                  (youtube.plugin/init)
-                 (spacex.plugin/init)]}))
+                 (spacex.plugin/init)
+                 (vimeo.plugin/init)]}))
 
 
 (ws/defcard simple-parser-demo
@@ -52,11 +55,13 @@
 (defn element [name props & children]
   (apply js/React.createElement name (clj->js props) children))
 
-(def desc (atom {:vimeo.video/name "Hello world"}))
+(def video (atom {:vimeo.video/name "Hello world"}))
+(def me (atom {}))
+(def albums (atom {}))
 
 (ws/defcard vimeo-test1
   (ct.react/react-card
-    (let [txt (:vimeo.video/name @desc)]
+    (let [txt (:vimeo.video/name @video)]
       (element "div" {} txt))))
 
 (defn fetch-vimeo! []
@@ -64,14 +69,44 @@
   (async/go
     (let [res (v.api/single-fetch-video-by-id
                 {:demo.connect.vimeo/access-token secret/vimeo-token
+                 :demo.connect.vimeo/user-id 118038002
                  ::p.http/driver                  p.http.fetch/request-async}
                 {:vimeo.video/id 467144004})]
 
       (let [resres (async/<! res)
             _ (println "main: type resres: " (type resres))]
-       ;_ (println "main: result: " resres)]
+        ;_ (println "main: result: " resres)]
 
-        (reset! desc resres)))))
+        (reset! video resres)))))
+
+(defn fetch-me! []
+  (async/go
+    (let [res (v.api/fetch-me
+                {:demo.connect.vimeo/access-token secret/vimeo-token
+                 ::p.http/driver                  p.http.fetch/request-async}
+                {})]
+
+      (let [resres (async/<! res)
+            _ (println "main: type resres: " (type resres))]
+        ;_ (println "main: result: " resres)]
+
+        (reset! me resres)))))
+
+(defn fetch-albums! []
+  (async/go
+    (let [res (v.api/single-fetch-albums-by-user-id
+                {:demo.connect.vimeo/access-token secret/vimeo-token
+                 ;:demo.connect.vimeo/user-id 118038002
+                 ::p.http/driver                  p.http.fetch/request-async}
+                {:vimeo.user/id 118038002})]
+
+      (let [resres (async/<! res)
+            _ (println "main: type resres: " (type resres))]
+        ;_ (println "main: result: " resres)]
+
+        (reset! albums resres)))))
+
+
 
 
 
