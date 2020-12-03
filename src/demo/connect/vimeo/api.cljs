@@ -1,6 +1,7 @@
 (ns demo.connect.vimeo.api
   (:require [com.wsscode.common.async-cljs :refer [<? go-catch]]
-            [demo.connect.vimeo.util :as util]))
+            [demo.connect.vimeo.util :as util]
+            [demo.secret :as secret]))
 
 
 (defn adapt-video [vimeo]
@@ -9,8 +10,11 @@
 (defn adapt-me [vimeo]
   (util/adapt-recursive vimeo "vimeo.me"))
 
-(defn adapt-albums [vimeo]
-  (util/adapt-recursive vimeo "vimeo.albums"))
+(defn adapt-album [vimeo]
+  (util/adapt-recursive vimeo "vimeo.album"))
+
+(defn adapt-album-list [vimeo]
+  (util/adapt-recursive vimeo "vimeo.album-list"))
 
 
 ;(defn single-fetch-launch [env input]
@@ -38,14 +42,25 @@
 
 ; /users/118038002/albums
 
-(defn single-fetch-albums-by-user-id [env input]
+(defn fetch-album-list-by-user-id [env input]
   (let [{:keys [:vimeo.user/id]} input]
-    (println "single-fetch-albums: id: " id)
+    (println "album-list-by-user-id: user-id: " id)
     (go-catch
       (-> (util/vimeo-api env (str "/users/" id "/albums") {})
           <?
-          adapt-albums
-          (merge {:vimeo.user/id id})))))
+          (merge {:id id})
+          ; must update before we rename :data key with namespace
+          ; put key :user-id
+          (update :data (fn [m]
+                          (mapv #(merge % {:user-id id})
+                                m)))
+          (update :data #(mapv adapt-album %))
+          adapt-album-list))))
+
+(comment
+  (single-fetch-albums-by-user-id
+    {:demo.connect.vimeo/access-token   secret/vimeo-token}
+    {:vimeo.user/id 118038002}))
 
 ;(defn single-fetch-playlist-by-channel-id [env playlist-output input]
 ;  (let [{:keys [:youtube.channel/id]} input]

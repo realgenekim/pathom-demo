@@ -1,6 +1,9 @@
 (ns demo.connect.vimeo.attrs)
 
-(def aliases {})
+(def aliases
+  {:vimeo.user/id :vimeo.album/user-id})
+
+
 
 ; :vimeo.video.user/uri "/users/118038002",
 
@@ -240,116 +243,186 @@
 
 
 
-(def albums
-  [:vimeo.user/id
-   {:vimeo.albums/data [:allow_continuous_play
-                        :allow_downloads
-                        :allow_share
-                        :autoplay
-                        :brand_color
-                        :created_time
-                        {:custom_logo [:active :default_picture :resource_key {:sizes [:height :link :width]} :type :uri]}
-                        :description
-                        :domain
-                        :domain_certificate_state
-                        :duration
-                        {:embed [:html]}
-                        :embed_brand_color
-                        :embed_custom_logo
-                        :hide_nav
-                        :hide_upcoming
-                        :hide_vimeo_logo
-                        :layout
-                        :link
-                        :loop
-                        {:metadata [{:connections [{:available_videos [:options :total :uri]}
-                                                   {:videos [:options :total :uri]}]}
-                                    {:interactions [{:add_custom_thumbnails [:options :uri]}
-                                                    {:add_live_events [:options :uri]}
-                                                    {:add_logos [:options :uri]}
-                                                    {:add_videos [:options :uri]}]}]}
-                        :modified_time
-                        :name
-                        {:pictures [:active
-                                    :default_picture
-                                    :resource_key
-                                    {:sizes [:height :link :link_with_play_button :width]}
-                                    :type
-                                    :uri]}
-                        {:privacy [:view :password]}
-                        :resource_key
-                        :review_mode
-                        :roku_genres
-                        :roku_language
-                        :roku_provider_name
-                        :seo_allow_indexed
-                        :seo_description
-                        :seo_keywords
-                        :seo_title
-                        :share_link
-                        :sort
-                        :theme
-                        :uri
-                        :url
-                        :use_custom_domain
-                        {:user [:account
-                                :available_for_hire
-                                :bio
-                                :can_work_remotely
-                                :created_time
-                                :gender
-                                :link
-                                :location
-                                {:location_details [:city
-                                                    :country
-                                                    :country_iso_code
-                                                    :formatted_address
-                                                    :latitude
-                                                    :longitude
-                                                    :neighborhood
-                                                    :state
-                                                    :state_iso_code
-                                                    :sub_locality]}
-                                {:metadata [{:connections [{:albums [:options :total :uri]}
-                                                           {:appearances [:options :total :uri]}
-                                                           {:channels [:options :total :uri]}
-                                                           {:feed [:options :uri]}
-                                                           {:folders [:options :total :uri]}
-                                                           {:folders_root [:options :uri]}
-                                                           {:followers [:options :total :uri]}
-                                                           {:following [:options :total :uri]}
-                                                           {:groups [:options :total :uri]}
-                                                           {:likes [:options :total :uri]}
-                                                           {:membership [:options :uri]}
-                                                           {:moderated_channels [:options :total :uri]}
-                                                           {:pictures [:options :total :uri]}
-                                                           {:portfolios [:options :total :uri]}
-                                                           {:shared [:options :total :uri]}
-                                                           {:teams [:options :total :uri]}
-                                                           {:videos [:options :total :uri]}]}
-                                            {:interactions [{:block [:added :added_time :options :uri]}
-                                                            {:follow [:added :added_time :options :uri]}
-                                                            {:report [:options :reason :uri]}]}]}
-                                :name
-                                {:pictures [:active
-                                            :default_picture
-                                            :resource_key
-                                            {:sizes [:height :link :width]}
-                                            :type
-                                            :uri]}
-                                {:preferences [{:videos [{:privacy [:add :comments :download :embed :view]}]}]}
-                                :resource_key
-                                :short_bio
-                                :skills
-                                :uri
-                                {:websites [:description :link :name :type :uri]}]}
-                        :web_brand_color
-                        :web_custom_logo]}
-   :vimeo.albums/page
-   :vimeo.albums/per-page
-   :vimeo.albums/total
-   :vimeo.albums.paging/first
-   :vimeo.albums.paging/last
-   :vimeo.albums.paging/next
-   :vimeo.albums.paging/previous])
+(def album-list
+  [{:vimeo.album-list/data [:vimeo.album/allow-continuous-play
+                            :vimeo.album/allow-downloads
+                            :vimeo.album/allow-share
+                            :vimeo.album/autoplay
+                            :vimeo.album/brand-color
+                            :vimeo.album/created-time
+                            :vimeo.album/custom-logo
+                            :vimeo.album/description
+                            :vimeo.album/domain
+                            :vimeo.album/domain-certificate-state
+                            :vimeo.album/duration
+                            :vimeo.album/embed-brand-color
+                            :vimeo.album/embed-custom-logo
+                            :vimeo.album/hide-nav
+                            :vimeo.album/hide-upcoming
+                            :vimeo.album/hide-vimeo-logo
+                            :vimeo.album/layout
+                            :vimeo.album/link
+                            :vimeo.album/loop
+                            :vimeo.album/modified-time
+                            :vimeo.album/name
+                            :vimeo.album/resource-key
+                            :vimeo.album/review-mode
+                            :vimeo.album/roku-genres
+                            :vimeo.album/roku-language
+                            :vimeo.album/roku-provider-name
+                            :vimeo.album/seo-allow-indexed
+                            :vimeo.album/seo-description
+                            :vimeo.album/seo-keywords
+                            :vimeo.album/seo-title
+                            :vimeo.album/share-link
+                            :vimeo.album/sort
+                            :vimeo.album/theme
+                            :vimeo.album/uri
+                            :vimeo.album/url
+                            :vimeo.album/use-custom-domain
+                            :vimeo.album/user-id
+                            :vimeo.album/web-brand-color
+                            :vimeo.album/web-custom-logo
+                            :vimeo.album.embed/html
+                            :vimeo.album.metadata.connections.available-videos/options
+                            :vimeo.album.metadata.connections.available-videos/total
+                            :vimeo.album.metadata.connections.available-videos/uri
+                            :vimeo.album.metadata.connections.videos/options
+                            :vimeo.album.metadata.connections.videos/total
+                            :vimeo.album.metadata.connections.videos/uri
+                            :vimeo.album.metadata.interactions.add-custom-thumbnails/options
+                            :vimeo.album.metadata.interactions.add-custom-thumbnails/uri
+                            :vimeo.album.metadata.interactions.add-live-events/options
+                            :vimeo.album.metadata.interactions.add-live-events/uri
+                            :vimeo.album.metadata.interactions.add-logos/options
+                            :vimeo.album.metadata.interactions.add-logos/uri
+                            :vimeo.album.metadata.interactions.add-videos/options
+                            :vimeo.album.metadata.interactions.add-videos/uri
+                            :vimeo.album.pictures/active
+                            :vimeo.album.pictures/default-picture
+                            :vimeo.album.pictures/resource-key
+                            {:vimeo.album.pictures/sizes [:height :link :link_with_play_button :width]}
+                            :vimeo.album.pictures/type
+                            :vimeo.album.pictures/uri
+                            :vimeo.album.privacy/view
+                            :vimeo.album.user/account
+                            :vimeo.album.user/available-for-hire
+                            :vimeo.album.user/bio
+                            :vimeo.album.user/can-work-remotely
+                            :vimeo.album.user/created-time
+                            :vimeo.album.user/gender
+                            :vimeo.album.user/link
+                            :vimeo.album.user/location
+                            :vimeo.album.user/name
+                            :vimeo.album.user/resource-key
+                            :vimeo.album.user/short-bio
+                            :vimeo.album.user/skills
+                            :vimeo.album.user/uri
+                            {:vimeo.album.user/websites [:description :link :name :type :uri]}
+                            :vimeo.album.user.location-details/city
+                            :vimeo.album.user.location-details/country
+                            :vimeo.album.user.location-details/country-iso-code
+                            :vimeo.album.user.location-details/formatted-address
+                            :vimeo.album.user.location-details/latitude
+                            :vimeo.album.user.location-details/longitude
+                            :vimeo.album.user.location-details/neighborhood
+                            :vimeo.album.user.location-details/state
+                            :vimeo.album.user.location-details/state-iso-code
+                            :vimeo.album.user.location-details/sub-locality
+                            :vimeo.album.user.metadata.connections.albums/options
+                            :vimeo.album.user.metadata.connections.albums/total
+                            :vimeo.album.user.metadata.connections.albums/uri
+                            :vimeo.album.user.metadata.connections.appearances/options
+                            :vimeo.album.user.metadata.connections.appearances/total
+                            :vimeo.album.user.metadata.connections.appearances/uri
+                            :vimeo.album.user.metadata.connections.channels/options
+                            :vimeo.album.user.metadata.connections.channels/total
+                            :vimeo.album.user.metadata.connections.channels/uri
+                            :vimeo.album.user.metadata.connections.feed/options
+                            :vimeo.album.user.metadata.connections.feed/uri
+                            :vimeo.album.user.metadata.connections.folders/options
+                            :vimeo.album.user.metadata.connections.folders/total
+                            :vimeo.album.user.metadata.connections.folders/uri
+                            :vimeo.album.user.metadata.connections.folders-root/options
+                            :vimeo.album.user.metadata.connections.folders-root/uri
+                            :vimeo.album.user.metadata.connections.followers/options
+                            :vimeo.album.user.metadata.connections.followers/total
+                            :vimeo.album.user.metadata.connections.followers/uri
+                            :vimeo.album.user.metadata.connections.following/options
+                            :vimeo.album.user.metadata.connections.following/total
+                            :vimeo.album.user.metadata.connections.following/uri
+                            :vimeo.album.user.metadata.connections.groups/options
+                            :vimeo.album.user.metadata.connections.groups/total
+                            :vimeo.album.user.metadata.connections.groups/uri
+                            :vimeo.album.user.metadata.connections.likes/options
+                            :vimeo.album.user.metadata.connections.likes/total
+                            :vimeo.album.user.metadata.connections.likes/uri
+                            :vimeo.album.user.metadata.connections.membership/options
+                            :vimeo.album.user.metadata.connections.membership/uri
+                            :vimeo.album.user.metadata.connections.moderated-channels/options
+                            :vimeo.album.user.metadata.connections.moderated-channels/total
+                            :vimeo.album.user.metadata.connections.moderated-channels/uri
+                            :vimeo.album.user.metadata.connections.pictures/options
+                            :vimeo.album.user.metadata.connections.pictures/total
+                            :vimeo.album.user.metadata.connections.pictures/uri
+                            :vimeo.album.user.metadata.connections.portfolios/options
+                            :vimeo.album.user.metadata.connections.portfolios/total
+                            :vimeo.album.user.metadata.connections.portfolios/uri
+                            :vimeo.album.user.metadata.connections.shared/options
+                            :vimeo.album.user.metadata.connections.shared/total
+                            :vimeo.album.user.metadata.connections.shared/uri
+                            :vimeo.album.user.metadata.connections.teams/options
+                            :vimeo.album.user.metadata.connections.teams/total
+                            :vimeo.album.user.metadata.connections.teams/uri
+                            :vimeo.album.user.metadata.connections.videos/options
+                            :vimeo.album.user.metadata.connections.videos/total
+                            :vimeo.album.user.metadata.connections.videos/uri
+                            :vimeo.album.user.metadata.interactions.block/added
+                            :vimeo.album.user.metadata.interactions.block/added-time
+                            :vimeo.album.user.metadata.interactions.block/options
+                            :vimeo.album.user.metadata.interactions.block/uri
+                            :vimeo.album.user.metadata.interactions.follow/added
+                            :vimeo.album.user.metadata.interactions.follow/added-time
+                            :vimeo.album.user.metadata.interactions.follow/options
+                            :vimeo.album.user.metadata.interactions.follow/uri
+                            :vimeo.album.user.metadata.interactions.report/options
+                            :vimeo.album.user.metadata.interactions.report/reason
+                            :vimeo.album.user.metadata.interactions.report/uri
+                            :vimeo.album.user.pictures/active
+                            :vimeo.album.user.pictures/default-picture
+                            :vimeo.album.user.pictures/resource-key
+                            {:vimeo.album.user.pictures/sizes [:height :link :width]}
+                            :vimeo.album.user.pictures/type
+                            :vimeo.album.user.pictures/uri
+                            :vimeo.album.user.preferences.videos.privacy/add
+                            :vimeo.album.user.preferences.videos.privacy/comments
+                            :vimeo.album.user.preferences.videos.privacy/download
+                            :vimeo.album.user.preferences.videos.privacy/embed
+                            :vimeo.album.user.preferences.videos.privacy/view
+                            :vimeo.album.privacy/password
+                            :vimeo.album.custom-logo/active
+                            :vimeo.album.custom-logo/default-picture
+                            :vimeo.album.custom-logo/resource-key
+                            {:vimeo.album.custom-logo/sizes [:height :link :width]}
+                            :vimeo.album.custom-logo/type
+                            :vimeo.album.custom-logo/uri]}
+   :vimeo.album-list/id
+   :vimeo.album-list/page
+   :vimeo.album-list/per-page
+   :vimeo.album-list/total
+   :vimeo.album-list.paging/first
+   :vimeo.album-list.paging/last
+   :vimeo.album-list.paging/next
+   :vimeo.album-list.paging/previous])
+
+; what do we do with pagnition data?
+;
+;    :vimeo.albums/page
+;   :vimeo.albums/per-page
+;   :vimeo.albums/total
+;   :vimeo.albums.paging/first
+;   :vimeo.albums.paging/last
+;   :vimeo.albums.paging/next
+;   :vimeo.albums.paging/previous)
+
 

@@ -94,7 +94,7 @@
 
 (defn fetch-albums! []
   (async/go
-    (let [res (v.api/single-fetch-albums-by-user-id
+    (let [res (v.api/fetch-album-list-by-user-id
                 {:demo.connect.vimeo/access-token secret/vimeo-token
                  ;:demo.connect.vimeo/user-id 118038002
                  ::p.http/driver                  p.http.fetch/request-async}
@@ -107,7 +107,8 @@
         (reset! albums resres)))))
 
 
-
+(comment
+  (pc/data->shape ...))
 
 
 (ws/mount)

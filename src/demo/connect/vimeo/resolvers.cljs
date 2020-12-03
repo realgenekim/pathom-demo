@@ -20,11 +20,11 @@
      ::pc/output (mergev [attrs/me])}
     (api/fetch-me env input)))
 
-(def album-by-user-id
-  (pc/defresolver album-by-user-id [env input]
+(def albums-by-user-id
+  (pc/defresolver albums-by-user-id [env input]
     {::pc/input  #{:vimeo.user/id}
-     ::pc/output (mergev [attrs/albums])}
-    (api/single-fetch-albums-by-user-id env input)))
+     ::pc/output (mergev [attrs/album-list])}
+    (api/fetch-album-list-by-user-id env input)))
 
 ;
 
@@ -40,5 +40,5 @@
 
 
 (defn resolvers []
-  (mergev [[video-by-id album-by-user-id me]
+  (mergev [[video-by-id albums-by-user-id me]
            (alias-resolvers attrs/aliases)]))
