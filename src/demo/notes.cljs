@@ -3,6 +3,37 @@
 
 (comment
 
+  ;; vimeo
+  [{[:vimeo.video/id 467144004]
+    [:vimeo.video/description
+     :vimeo.video/name
+     :vimeo.video.user.pictures/uri]}]
+
+  [{[:vimeo.video/id 467144004]
+    [* :vimeo.video.user.metadata.connections.albums/options]}]
+
+  [{[:spacex.launch/id 67]
+    [* :spacex.launch/launch-year]}]
+
+
+
+  ;/users/118038002/albums
+
+  [{[:vimeo.user/id 118038002]
+    [* :vimeo.albums]}]
+
+  [{[:vimeo.video/id 467144004]
+    [:vimeo.video.user.pictures/sizes]}]
+
+  [{[:vimeo.video/id 467144004]
+    [:vimeo.album-list/data]}]
+
+  [{[:vimeo.user/id 118038002]
+    [:vimeo.album-list/data]}]
+
+  [{[:vimeo.user/id 118038002]
+    [{:vimeo.album-list/data [:vimeo.album/uri]}]}]
+
   ;; Video
 
   [{[:youtube.video/id "6_mbxaRDA-s"]
@@ -103,6 +134,6 @@
    {:>/my-videos
     [{:my-videos
       [:youtube.video.snippet/title
-       :youtube.video.statistics/view-count]}]}]
+       :youtube.video.statistics/view-count]}]}])
 
-  )
+
