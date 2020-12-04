@@ -85,7 +85,7 @@
   ;
   ; that worked, right?  so, how do I get the result of the query out?
 
-  (go (async/<! (println x)))
+  (go (println (async/<! x)))
   (go-catch (<? x))
 
   ; TypeError: Cannot read property 'call' of undefined
@@ -94,6 +94,11 @@
 
   (go (async/<! (intparser {} [{[:vimeo.user/id 118038002]
                                 [{:vimeo.album-list/data [:vimeo.album/uri]}]}]))))
+
+  ; TypeError: Cannot read property 'call' of undefined
+  ;    at eval (eval at <anonymous> (http://localhost:8087/js/cljs-runtime/shadow.cljs.devtools.client.browser.js:823:8), <anonymous>:1:31)
+
+
 
 
 (ws/defcard simple-parser-demo
