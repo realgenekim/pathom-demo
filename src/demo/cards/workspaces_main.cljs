@@ -13,6 +13,7 @@
             [nubank.workspaces.card-types.react :as ct.react]
             [demo.connect.vimeo.util :as vimeo.util]
             [demo.connect.vimeo.api :as v.api]
+            [com.wsscode.common.async-cljs :refer [<? go-catch]]
             [cljs.core.async :as async]))
 
 
@@ -47,6 +48,52 @@
                  (youtube.plugin/init)
                  (spacex.plugin/init)
                  (vimeo.plugin/init)]}))
+
+;
+; ^^ the function above requires no arguments
+;
+; how do I create a parser that I can run from the REPL?
+;
+
+
+(def intparser
+  (p/parallel-parser
+    {::p/env     {::p/reader                         [p/map-reader pc/parallel-reader pc/ident-reader p/env-placeholder-reader
+                                                      pc/all-readers]
+                  ::p/placeholder-prefixes           #{">"}
+                  ::pc/resolver-dispatch             pc/resolver-dispatch-embedded
+                  ::pc/mutate-dispatch               pc/mutation-dispatch-embedded
+                  ::p.http/driver                    p.http.fetch/request-async
+                  :demo.connect.youtube/access-token secret/youtube-token
+                  :demo.connect.vimeo/access-token   secret/vimeo-token
+                  ::db                               (atom {})}
+     ::p/mutate  pc/mutate-async
+     ::p/plugins [p/error-handler-plugin
+                  p/request-cache-plugin
+                  p/trace-plugin
+                  (pc/connect-plugin {::pc/register (app-registry)})
+                  (youtube.plugin/init)
+                  (spacex.plugin/init)
+                  (vimeo.plugin/init)]}))
+
+(comment
+
+  (def x (intparser {} [{[:vimeo.user/id 118038002]
+                         [{:vimeo.album-list/data [:vimeo.album/uri]}]}]))
+
+  ; => #object[cljs.core.async.impl.channels.ManyToManyChannel]
+  ;
+  ; that worked, right?  so, how do I get the result of the query out?
+
+  (go (async/<! (println x)))
+  (go-catch (<? x))
+
+  ; TypeError: Cannot read property 'call' of undefined
+  ;    at eval (eval at <anonymous> (http://localhost:8087/js/cljs-runtime/shadow.cljs.devtools.client.browser.js:823:8), <anonymous>:1:31)
+
+
+  (go (async/<! (intparser {} [{[:vimeo.user/id 118038002]
+                                [{:vimeo.album-list/data [:vimeo.album/uri]}]}]))))
 
 
 (ws/defcard simple-parser-demo
@@ -108,6 +155,13 @@
 
 
 (comment
+
+  (parser {} [{[:vimeo.user/id 118038002]
+               [{:vimeo.album-list/data [:vimeo.album/uri]}]}])
+
+  (go (async/<! (intparser {} [{[:vimeo.user/id 118038002]
+                                [{:vimeo.album-list/data [:vimeo.album/uri]}]}])))
+
   (pc/data->shape ...))
 
 
