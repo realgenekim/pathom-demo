@@ -36,7 +36,10 @@
 
 (defn parser []
   (p/parallel-parser
-   {::p/env     {::p/reader                         [p/map-reader pc/parallel-reader pc/ident-reader p/env-placeholder-reader
+   {::p/env     {::p/reader                         [p/map-reader
+                                                     pc/parallel-reader
+                                                     pc/ident-reader
+                                                     p/env-placeholder-reader
                                                      pc/all-readers]
                  ::p/placeholder-prefixes           #{">"}
                  ::pc/resolver-dispatch             pc/resolver-dispatch-embedded
@@ -64,18 +67,24 @@
 (def intparser
   (p/async-parser
     {::p/env     {::p/reader                         [p/map-reader
-                                                      p/ident-join-reader
-                                                      p/env-placeholder-reader
-                                                      ;pc/parallel-reader
-                                                      ;pc/all-async-readers
                                                       pc/async-reader2
-                                                      ;(p/placeholder-reader)]
-                                                      pc/ident-reader]
+                                                      pc/ident-reader
+                                                      p/env-placeholder-reader
+                                                      pc/all-readers]
+
+                                                      ;p/map-reader
+                                                      ;;p/ident-join-reader
+                                                      ;p/env-placeholder-reader
+                                                      ;;pc/parallel-reader
+                                                      ;;pc/all-async-readers
+                                                      ;pc/async-reader2
+                                                      ;;(p/placeholder-reader)]
+                                                      ;pc/ident-reader]
                                                       ;pc/all-readers]
                   ::p/placeholder-prefixes           #{">"}
                   ;::pc/resolver-dispatch             pc/resolver-dispatch-embedded
                   ;::pc/mutate-dispatch               pc/mutation-dispatch-embedded
-                  ;::p.http/driver                    p.http.fetch/request-async
+                  ::p.http/driver                    p.http.fetch/request-async
                   :demo.connect.youtube/access-token secret/youtube-token
                   :demo.connect.vimeo/access-token   secret/vimeo-token
                   ::db                               (atom {})}
@@ -100,6 +109,11 @@
   ;=> {[:vimeo.user/id 118038002]
   ;    {:vimeo.album-list/data
   ;      #object[cljs.core.async.impl.channels.ManyToManyChannel]}}
+
+  (go-catch
+    (let [r (<? (q))]
+      (reset! retval r)))
+
 
   (go-catch (reset! retval (<? (q))))
   @retval
