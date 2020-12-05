@@ -20,13 +20,16 @@
      ::pc/output (mergev [attrs/me])}
     (api/fetch-me env input)))
 
+
+;
+; need to include as part of input {:page-number 1}, or something like that...
+;
+
 (def albums-by-user-id
   (pc/defresolver albums-by-user-id [env input]
     {::pc/input  #{:vimeo.user/id}
      ::pc/output (mergev [attrs/album-list])}
     (api/fetch-album-list-by-user-id env input)))
-
-;
 
 
 (defn resolver-alias [from to]
