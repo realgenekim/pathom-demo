@@ -57,7 +57,7 @@
 
 
 (def intparser
-  (p/parser
+  (p/async-parser
     {::p/env     {::p/reader                         [p/map-reader
                                                       ;pc/parallel-reader
                                                       pc/all-async-readers
