@@ -106,21 +106,19 @@
 (comment
 
   (q)
-  ;=> {[:vimeo.user/id 118038002]
-  ;    {:vimeo.album-list/data
-  ;      #object[cljs.core.async.impl.channels.ManyToManyChannel]}}
 
+  ; THIS WORKS!!
   (go-catch
     (let [r (<? (q))]
       (reset! retval r)))
 
+  (go-catch
+    (let [r (<? (q))]
+      (println r)
+      (reset! retval r)))
 
+  ; this works
   (go-catch (reset! retval (<? (q))))
-  @retval
-  (async/go (<! (q)))
-
-  (go-catch (<? (q)))
-
 
 
   ;;; YESTERDAY
