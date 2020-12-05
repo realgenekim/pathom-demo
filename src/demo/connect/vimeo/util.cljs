@@ -40,7 +40,7 @@
           gen-uri (str gen-path query-str)]
 
       (print "vimeo-api:" access-token)
-      (println "vimeo-api: env: " env)
+      ;(println "vimeo-api: env: " env)
       (println "vimeo-api: path: " path)
       (println "vimeo-api: gen-path: " gen-path)
       (println "vimeo-api: data: " data)
@@ -61,7 +61,7 @@
 
 (defn vimeo-api-123 [{:keys [:demo.connect.vimeo/access-token] :as env} path data]
   (go-catch
-    (println env)
+    ;(println env)
     (println path)
     (println data)
     (println (str base-uri path "?" (query-string data)))

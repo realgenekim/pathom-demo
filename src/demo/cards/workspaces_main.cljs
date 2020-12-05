@@ -57,26 +57,46 @@
 
 
 (def intparser
-  (p/parallel-parser
-    {::p/env     {::p/reader                         [p/map-reader pc/parallel-reader pc/ident-reader p/env-placeholder-reader
-                                                      pc/all-readers]
+  (p/parser
+    {::p/env     {::p/reader                         [p/map-reader
+                                                      ;pc/parallel-reader
+                                                      pc/all-async-readers
+                                                      ;pc/async-reader2
+                                                      p/ident-join-reader
+                                                      (p/placeholder-reader)]
+                                                      ;pc/ident-reader
+                                                      ;p/env-placeholder-reader
+                                                      ;pc/all-readers]
                   ::p/placeholder-prefixes           #{">"}
-                  ::pc/resolver-dispatch             pc/resolver-dispatch-embedded
-                  ::pc/mutate-dispatch               pc/mutation-dispatch-embedded
-                  ::p.http/driver                    p.http.fetch/request-async
+                  ;::pc/resolver-dispatch             pc/resolver-dispatch-embedded
+                  ;::pc/mutate-dispatch               pc/mutation-dispatch-embedded
+                  ;::p.http/driver                    p.http.fetch/request-async
                   :demo.connect.youtube/access-token secret/youtube-token
                   :demo.connect.vimeo/access-token   secret/vimeo-token
                   ::db                               (atom {})}
-     ::p/mutate  pc/mutate-async
+     ;::p/mutate  pc/mutate-async
      ::p/plugins [p/error-handler-plugin
-                  p/request-cache-plugin
+                  ;p/request-cache-plugin
                   p/trace-plugin
                   (pc/connect-plugin {::pc/register (app-registry)})
                   (youtube.plugin/init)
                   (spacex.plugin/init)
                   (vimeo.plugin/init)]}))
 
+(defn q []
+  (intparser {} [{[:vimeo.user/id 118038002]
+                  [{:vimeo.album-list/data [:vimeo.album/uri]}]}]))
+
 (comment
+
+  (q)
+  ;=> {[:vimeo.user/id 118038002]
+  ;    {:vimeo.album-list/data
+  ;      #object[cljs.core.async.impl.channels.ManyToManyChannel]}}
+
+
+
+  ;;; YESTERDAY
 
   (def x (intparser {} [{[:vimeo.user/id 118038002]
                          [{:vimeo.album-list/data [:vimeo.album/uri]}]}]))
@@ -86,7 +106,10 @@
   ; that worked, right?  so, how do I get the result of the query out?
 
   (go (println (async/<! x)))
-  (go-catch (<? x))
+  (go-catch (js.console/log (async/<? q)))
+  (q)
+
+  (js/console.log "hello")
 
   ; TypeError: Cannot read property 'call' of undefined
   ;    at eval (eval at <anonymous> (http://localhost:8087/js/cljs-runtime/shadow.cljs.devtools.client.browser.js:823:8), <anonymous>:1:31)
@@ -161,8 +184,8 @@
 
 (comment
 
-  (parser {} [{[:vimeo.user/id 118038002]
-               [{:vimeo.album-list/data [:vimeo.album/uri]}]}])
+  (intparser {} [{[:vimeo.user/id 118038002]
+                  [{:vimeo.album-list/data [:vimeo.album/uri]}]}])
 
   (go (async/<! (intparser {} [{[:vimeo.user/id 118038002]
                                 [{:vimeo.album-list/data [:vimeo.album/uri]}]}])))
