@@ -16,6 +16,11 @@
             [com.wsscode.common.async-cljs :refer [<? go-catch]]
             [cljs.core.async :as async]))
 
+;
+; (shadow/repl :workspaces)
+; To quit, type: :cljs/quit
+; => [:selected :workspaces]
+
 
 (pc/defresolver my-videos [env input]
   {::pc/output [{:my-videos [:youtube.video/id]}]}
@@ -59,13 +64,13 @@
 (def intparser
   (p/async-parser
     {::p/env     {::p/reader                         [p/map-reader
-                                                      ;pc/parallel-reader
-                                                      pc/all-async-readers
-                                                      ;pc/async-reader2
                                                       p/ident-join-reader
-                                                      (p/placeholder-reader)]
-                                                      ;pc/ident-reader
-                                                      ;p/env-placeholder-reader
+                                                      p/env-placeholder-reader
+                                                      ;pc/parallel-reader
+                                                      ;pc/all-async-readers
+                                                      pc/async-reader2
+                                                      ;(p/placeholder-reader)]
+                                                      pc/ident-reader]
                                                       ;pc/all-readers]
                   ::p/placeholder-prefixes           #{">"}
                   ;::pc/resolver-dispatch             pc/resolver-dispatch-embedded
@@ -77,7 +82,7 @@
      ;::p/mutate  pc/mutate-async
      ::p/plugins [p/error-handler-plugin
                   ;p/request-cache-plugin
-                  p/trace-plugin
+                  ;p/trace-plugin
                   (pc/connect-plugin {::pc/register (app-registry)})
                   (youtube.plugin/init)
                   (spacex.plugin/init)
@@ -87,12 +92,20 @@
   (intparser {} [{[:vimeo.user/id 118038002]
                   [{:vimeo.album-list/data [:vimeo.album/uri]}]}]))
 
+(def retval (atom {}))
+
 (comment
 
   (q)
   ;=> {[:vimeo.user/id 118038002]
   ;    {:vimeo.album-list/data
   ;      #object[cljs.core.async.impl.channels.ManyToManyChannel]}}
+
+  (go-catch (reset! retval (<? (q))))
+  @retval
+  (async/go (<! (q)))
+
+  (go-catch (<? (q)))
 
 
 
